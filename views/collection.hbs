@@ -1,0 +1,28 @@
+{{!< default}}
+
+
+<div class="row">
+    <div class="col2" style="width: 100px;"></div>
+    <div class="col-3" style="height: 250px; width: 250px; position: relative">
+        <img style="position: absolute; top: 225px; right: 64px;" src="/img/crate.png" alt="">
+        {{#each albums}} 
+            <img style="height: 150px; width: 150px; position: absolute; top: {{this.pos}}px; right: {{this.pos}}px; z-index: {{this.zIndex}};" src="{{this.img}}" alt="{{this.name}}">
+        {{/each}}   
+    </div>
+    <div class="col-3" style="height: 250px; width: 250px; position: relative">
+        <img style="position: absolute; top: 225px; right: 64px;" src="/img/crate.png" alt="">
+        {{#each albums}} 
+            <img style="height: 150px; width: 150px; position: absolute; top: {{this.pos}}px; right: {{this.pos}}px; z-index: {{this.zIndex}};" src="{{this.img}}" alt="{{this.name}}">
+        {{/each}}   
+    </div>
+    <div class="col-3" style="height: 250px; width: 250px; position: relative">
+        <img style="position: absolute; top: 225px; right: 64px;" src="/img/crate.png" alt="">
+        {{#each albums}} 
+            <img style="height: 150px; width: 150px; position: absolute; top: {{this.pos}}px; right: {{this.pos}}px; z-index: {{this.zIndex}};" src="{{this.img}}" alt="{{this.name}}">
+        {{/each}}   
+    </div>
+    
+</div>
+
+
+
