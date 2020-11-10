@@ -1,0 +1,9 @@
+body {
+    background-image: url("https://img.freepik.com/free-photo/dark-blue-product-background_53876-89503.jpg?size=626&ext=jpg");
+    background-repeat: no-repeat, repeat;
+    background-size: cover;
+}
+
+.ss{
+    background-color: aqua;
+}

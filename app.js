@@ -5,7 +5,8 @@ const session = require('express-session')
 const cors = require('cors');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
-const exphbs = require('exphbs')
+//const exphbs = require('exphbs')
+const exphbs = require('express-handlebars');
 const fetch = require('node-fetch');
 const path = require('path');
 //var fetch = require("fetch");
@@ -21,8 +22,9 @@ const port = process.env.PORT || 8888;
 // app creation
 var app = express();
 
-app.use(express.static(path.join(__dirname, '/public')))
+
 // intialize middleware
+app.use(express.static(path.join(__dirname, '/public')));
 app.use(cors())
    .use(cookieParser())
    .use(session({
@@ -31,10 +33,13 @@ app.use(cors())
      saveUnintialized: false,
    }));
 
-session.data;
 
-app.engine('hbs', exphbs);
-app.set('view engine', 'hbs');
+   app.engine('handlebars', exphbs({
+    defaultLayout: 'default',
+    
+  }));
+  app.set('view engine', 'handlebars');
+
 
 //home page
 app.get('/', function(req, res) {
