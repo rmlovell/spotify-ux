@@ -50,8 +50,7 @@ app.get('/milkcrate', function(req, res) {
     headers: { 
       'Authorization': 'Bearer ' + req.session.access_token,
       'Accept' : 'application/json',
-      'Content-Type' : 'application/json',
-      'Scope' : 'user-library-read'
+      'Content-Type' : 'application/json'
    },
     json: true
   };
