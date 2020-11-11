@@ -51,7 +51,7 @@ app.get('/', function(req, res) {
 app.get('/milkcrate', function(req, res) {
 
   var options = {
-    url: 'https://api.spotify.com/v1/me/albums?limit=10&offset=5&market=ES',
+    url: 'https://api.spotify.com/v1/me/albums?limit=40&offset=0&market=ES',
     headers: { 
       'Authorization': 'Bearer ' + req.session.access_token,
       'Accept' : 'application/json',
@@ -63,6 +63,7 @@ app.get('/milkcrate', function(req, res) {
   // use the access token to access the Spotify Web API
   request.get(options, function(error, response, body) {
     console.log("-----------------------------------------------------");
+    var collection = [];
     var albums = [];
     var pos = 100;
     var zIndex = 20;
@@ -75,9 +76,21 @@ app.get('/milkcrate', function(req, res) {
         "pos" : pos,
         "zIndex" : zIndex
       }
+      //console.log(album);
       albums.push(album);
+      if (pos <= 0){
+        collection.push(albums);
+        albums = [];
+        pos = 100;
+        zIndex = 20;
+      }
+      
     });
-    res.render('collection', {albums : albums});
+    if(albums.length > 0){
+      collection.push(albums);
+    }
+    console.log(collection);
+    res.render('collection', {collection : collection});
 
     
 
@@ -105,7 +118,7 @@ app.get('/getAlbums', function(req, res){
 });
 
 // search albums api
-app.get('/searchAlbums', function(req, res){
+app.post('/searchAlbums', function(req, res){
 
   
 
