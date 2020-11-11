@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const exphbs = require('express-handlebars');
 const fetch = require('node-fetch');
 const path = require('path');
+const bodyParser = require('body-parser')
 //var fetch = require("fetch");
 
 // keys and ports 
@@ -24,6 +25,8 @@ var app = express();
 
 
 // intialize middleware
+app.use(bodyParser.urlencoded({extended : false}));
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(cors())
    .use(cookieParser())
@@ -119,8 +122,53 @@ app.get('/getAlbums', function(req, res){
 
 // search albums api
 app.post('/searchAlbums', function(req, res){
+  console.log(req.body.text);
 
-  
+  var options = {
+    url: 'https://api.spotify.com/v1/search?q='+ req.body.text +'&type=album&limit=5',
+    headers: { 
+      'Authorization': 'Bearer ' + req.session.access_token,
+      'Accept' : 'application/json',
+      'Content-Type' : 'application/json'
+   },
+    json: true
+  };
+
+  request.get(options, function(error, response, body) {
+    var albums = []
+    body.albums.items.forEach(el => {
+      var album = {
+        "artistName" : el.artists[0].name,
+        "img" : el.images[2].url,
+        "albumName" : el.name,
+        "id" : el.id
+      }
+      albums.push(album);
+    });
+    //var packed ={"albums" : albums};
+    res.send(JSON.stringify(albums));
+
+  });
+
+});
+
+// sort albums api
+app.post('/addAlbums', function(req, res){
+  console.log(req.body.id);
+  var options = {
+    url: 'https://api.spotify.com/v1/me/albums?ids=' + req.body.id,
+    method: 'PUT',
+    headers: { 
+      'Authorization': 'Bearer ' + req.session.access_token,
+      'Accept' : 'application/json',
+      'Content-Type' : 'application/json'
+   },
+    json: true
+  };
+
+  request(options, function(error, response, body) {
+    console.log(response);
+  });
 
 });
 
@@ -148,7 +196,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email user-library-read';
+  var scope = 'user-read-private user-read-email user-library-read user-library-modify';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
