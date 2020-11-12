@@ -16,11 +16,11 @@
     {{#each collection}}
         <div class="col-4 ">
             <div id="{{@index}}" onclick="selectCrate('{{@index}}')"  style="height: 250px; width: 250px; position: relative">
-                <h2 class="text-center" style="font-size: 1.2em; color: whitesmoke; -webkit-text-stroke: 0.25px black; position: absolute; top: 270px; right: 100px;">Album Name</h2>
+                <h2 id="album-text" class="text-center" style="font-size: 1.2em; color: whitesmoke; -webkit-text-stroke: 0.25px black; position: absolute; top: 270px; right: 100px;">Album Name</h2>
                 <!--<h2 class="text-center" style="font-size: 1.2em; color: whitesmoke; -webkit-text-stroke: 0.25px black; position: absolute; top: 310px; right: 100px;">Bucket name</h2>-->
                 <img style="position: absolute; top: 225px; right: 64px;" class=""  src="/img/crate.png" alt="">
                 {{#each this}} 
-                    <img id="{{name}}"  onclick="bringFront('{{name}}');" style="height: 150px; width: 150px; position: absolute; top: {{pos}}px; right: {{pos}}px; z-index: {{zIndex}};" src="{{img}}" alt="{{name}}">
+                    <img class="albums" id="{{name}}"  onclick="bringFront('{{name}}');" style="height: 150px; width: 150px; position: absolute; top: {{pos}}px; right: {{pos}}px; z-index: {{zIndex}};" src="{{img}}" alt="{{name}}">
                 {{/each}}   
             </div>
         </div>
@@ -49,4 +49,4 @@
 </div>
 
 {{!-- Loads in sorting script --}}
- <script src="/js/sort.js" defer></script> 
+<script src="/js/sort.js" defer></script> 

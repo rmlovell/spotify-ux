@@ -19,10 +19,11 @@ const redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 const stateKey = 'spotify_auth_state';
 const port = process.env.PORT || 8888;
 
+// Object that contains collections
+let storedCollections = {};
 
 // app creation
 var app = express();
-
 
 // intialize middleware
 app.use(bodyParser.urlencoded({extended : false}));
@@ -67,11 +68,13 @@ app.get('/milkcrate', function(req, res) {
 
   // use the access token to access the Spotify Web API
   request.get(options, function(error, response, body) {
+
     console.log("-----------------------------------------------------");
     var collection = [];
     var albums = [];
     var pos = 100;
     var zIndex = 20;
+
     body.items.forEach(el => {
       pos = pos - 10;
       zIndex = zIndex - 1;
@@ -96,14 +99,21 @@ app.get('/milkcrate', function(req, res) {
       collection.push(albums);
     }
     console.log(collection);
+
+    // Updates global collection variable with recently loaded collections
+    storedCollections = collection;
+
     res.render('collection', {collection : collection});
-
     
-
   })
-
+  
   //res.render('collection', {albums : albums});
 
+});
+
+// Sends collection in json format
+app.get('/milkcrate/json', function(req, res) {
+  res.send(storedCollections);
 });
 
 
@@ -191,13 +201,6 @@ app.post('/deleteAlbums', function(req, res){
   request(options, function(error, response, body) {
     console.log(response);
   });
-
-});
-
-// sort albums api
-app.get('/sortAlbums', function(req, res){
-
-  
 
 });
 
@@ -340,4 +343,4 @@ var generateRandomString = function(length) {
 // port listening
 
 console.log('Listening on 8888');
-app.listen(8888);
+app.listen(port);
