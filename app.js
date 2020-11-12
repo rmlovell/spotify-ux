@@ -53,6 +53,8 @@ app.get('/', function(req, res) {
 // collection page
 app.get('/milkcrate', function(req, res) {
 
+
+
   var options = {
     url: 'https://api.spotify.com/v1/me/albums?limit=40&offset=0&market=ES',
     headers: { 
@@ -77,7 +79,8 @@ app.get('/milkcrate', function(req, res) {
         "name" : el.album.name,
         "img" : el.album.images[1].url,
         "pos" : pos,
-        "zIndex" : zIndex
+        "zIndex" : zIndex,
+        "id" :  el.album.id
       }
       //console.log(album);
       albums.push(album);
@@ -154,6 +157,25 @@ app.post('/searchAlbums', function(req, res){
 
 // sort albums api
 app.post('/addAlbums', function(req, res){
+  console.log(req.body.id);
+  var options = {
+    url: 'https://api.spotify.com/v1/me/albums?ids=' + req.body.id,
+    method: 'PUT',
+    headers: { 
+      'Authorization': 'Bearer ' + req.session.access_token,
+      'Accept' : 'application/json',
+      'Content-Type' : 'application/json'
+   },
+    json: true
+  };
+
+  request(options, function(error, response, body) {
+    console.log(response);
+  });
+
+});
+// delete album
+app.post('/deleteAlbums', function(req, res){
   console.log(req.body.id);
   var options = {
     url: 'https://api.spotify.com/v1/me/albums?ids=' + req.body.id,
