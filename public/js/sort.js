@@ -1,7 +1,10 @@
+// Indicates whether sort has been used 
+let SORT = false;
+
 // Whenever album collection page loads
 window.addEventListener('load', async function() {
     
-    updateAlbumText();
+    updateAlbumText(SORT);
     
     // Where collection will be stored 
     collection = [];
@@ -20,8 +23,14 @@ window.addEventListener('load', async function() {
         }
     }
 
+    // When unsort is clicked
+    document.getElementById('unsort').addEventListener('click', function() {
+        window.location.href = '/milkcrate';
+    });
+
     // Sorting A-Z
     document.getElementById('alpha').addEventListener('click', async function() {
+        SORT = true;
         collection.forEach(arr => {
             const sorted = arr.sort(compare);
             finishSorting(sorted);
@@ -30,6 +39,7 @@ window.addEventListener('load', async function() {
 
     // Sorting Z-A
     document.getElementById('alpha-backwards').addEventListener('click', async function() {
+        SORT = true;
         collection.forEach(arr => {
             const sorted = arr.sort(compare);
             const reversed = sorted.slice(0, sorted.length).reverse();
@@ -59,14 +69,13 @@ function finishSorting(sorted) {
         replaceElements(sorted);
         
         // Updates album text 
-        updateAlbumText();
+        updateAlbumText(SORT);
         
         // Hides modal
         $('#sortModal').modal('hide');
 
         // close sidebar menu
         $("#sidebar").css('left', '-100vw');
-        
     } else {
         alert("Error sorting files");
     }
@@ -107,16 +116,46 @@ function getCurrAlbum() {
 } 
 
 // Updates album text
-function updateAlbumText() {
+function updateAlbumText(sort) {
     const curr_album = getCurrAlbum();
     const album_text = document.getElementsByClassName('album-text');
 
     if (album_text !== null && curr_album.length > 0) {
         for (let i = 0; i < album_text.length; ++i) {
-            album_text[i].innerText = curr_album[i].id;
+            // Sort has been used
+            if (sort) {
+                // Alphabetical categories
+                const alpha_cat = {
+                    "A-G": "ABCDEFG",
+                    "H-M": "HIJKLM",
+                    "N-T": "NOPQRST",
+                    "U-Z": "UVWXYZ"
+                };
+
+                let curr_cat = "NA";
+                // Retrieves current alphabetical category of album
+                for (let key in alpha_cat) {
+                    if (alpha_cat[key].includes(curr_album[i].id.toUpperCase()[0])) {
+                        curr_cat = key;
+                        break;
+                    }
+                }
+                // Updates text underneat album covers
+                $(album_text[i]).html(curr_album[i].id + "<br>" + curr_cat);
+            // No sorting used
+            } else {
+                // Updates text underneat album covers
+                album_text[i].innerText = curr_album[i].id;
+            }
         }
     }
 }
 
 // Checks and updates album name and sorting 
-window.addEventListener('change', updateAlbumText);
+window.addEventListener('change', () => updateAlbumText(true));
+
+// Checks and updates album name and sorting 
+window.addEventListener('keyup', () => updateAlbumText(SORT));
+
+// Checks and updates album name and sorting 
+window.addEventListener('click', () => updateAlbumText(SORT));
