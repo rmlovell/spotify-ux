@@ -16,21 +16,25 @@ window.addEventListener('load', async function() {
 
         if (body.length > 0) {
             // Collection updated with body from response
-            collection = Array.from(body[0]);
+            body.forEach(arr => collection.push(arr));
         }
     }
 
     // Sorting A-Z
     document.getElementById('alpha').addEventListener('click', async function() {
-        const sorted = collection.sort(compare);
-        finishSorting(sorted);
+        collection.forEach(arr => {
+            const sorted = arr.sort(compare);
+            finishSorting(sorted);
+        });
     });
 
     // Sorting Z-A
     document.getElementById('alpha-backwards').addEventListener('click', async function() {
-        const sorted = collection.sort(compare);
-        const reversed = sorted.slice(0, sorted.length).reverse();
-        finishSorting(reversed);
+        collection.forEach(arr => {
+            const sorted = arr.sort(compare);
+            const reversed = sorted.slice(0, sorted.length).reverse();
+            finishSorting(reversed);
+        });   
     });
 });
 
@@ -105,10 +109,12 @@ function getCurrAlbum() {
 // Updates album text
 function updateAlbumText() {
     const curr_album = getCurrAlbum();
-    const album_text = document.getElementById('album-text');
+    const album_text = document.getElementsByClassName('album-text');
 
     if (album_text !== null && curr_album.length > 0) {
-        album_text.innerText = curr_album[0].id;
+        for (let i = 0; i < album_text.length; ++i) {
+            album_text[i].innerText = curr_album[i].id;
+        }
     }
 }
 

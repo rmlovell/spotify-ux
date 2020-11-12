@@ -16,7 +16,7 @@
     {{#each collection}}
         <div class="col-4 ">
             <div id="{{@index}}" onclick="selectCrate('{{@index}}')"  style="height: 250px; width: 250px; position: relative">
-                <h2 id="album-text" class="text-center" style="font-size: 1.2em; color: whitesmoke; -webkit-text-stroke: 0.25px black; position: absolute; top: 270px; right: 100px;">Album Name</h2>
+                <h2 class="text-center album-text" style="font-size: 1.2em; color: whitesmoke; -webkit-text-stroke: 0.25px black; position: absolute; top: 270px; right: 100px;">Album Name</h2>
                 <!--<h2 class="text-center" style="font-size: 1.2em; color: whitesmoke; -webkit-text-stroke: 0.25px black; position: absolute; top: 310px; right: 100px;">Bucket name</h2>-->
                 <img style="position: absolute; top: 225px; right: 64px;" class=""  src="/img/crate.png" alt="">
                 {{#each this}} 
