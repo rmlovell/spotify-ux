@@ -13,32 +13,60 @@ window.addEventListener('load', async function() {
     if (response.ok) {
         // Converts response to json format
         const body = await response.json();
-        // Collection updated with body from response
-        collection = Array.from(body[0]);
+
+        if (body.length > 0) {
+            // Collection updated with body from response
+            collection = Array.from(body[0]);
+        }
     }
 
-    // Sorting alphabetically
+    // Sorting A-Z
     document.getElementById('alpha').addEventListener('click', async function() {
-        const sorted = collection.sort((a, b) => {
-            // Object should have name key
-            if (Object.keys(a).includes('name') || Object.keys(b).includes('name')) {
-                return undefined;
-            } else if (a.name < b.name) {
-                return -1;
-            } else if (a.name > b.name) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
+        const sorted = collection.sort(compare);
+        finishSorting(sorted);
+    });
 
-        if (sort !== undefined) {
-            replaceElements(sorted);
-        } else {
-            alert("Error sorting files");
-        }
+    // Sorting Z-A
+    document.getElementById('alpha-backwards').addEventListener('click', async function() {
+        const sorted = collection.sort(compare);
+        const reversed = sorted.slice(0, sorted.length).reverse();
+        finishSorting(reversed);
     });
 });
+
+// Compares two values in an order
+function compare(a, b) {
+     // Object should have name key
+     if (Object.keys(a).includes('name') || Object.keys(b).includes('name')) {
+        return undefined;
+    } else if (a.name < b.name) {
+        return -1;
+    } else if (a.name > b.name) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+// Process when sorting is finished
+function finishSorting(sorted) {
+    if (sorted !== undefined) {
+        // Replace HTML elements
+        replaceElements(sorted);
+        
+        // Updates album text 
+        updateAlbumText();
+        
+        // Hides modal
+        $('#sortModal').modal('hide');
+
+        // close sidebar menu
+        $("#sidebar").css('left', '-100vw');
+        
+    } else {
+        alert("Error sorting files");
+    }
+}
 
 function replaceElements(data) {
     // Initial coordinate values

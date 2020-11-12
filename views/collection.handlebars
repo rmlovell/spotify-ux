@@ -32,14 +32,15 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Sort:</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Sort by:</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
             <div class="modal-body container">
-                <button type="submit" class="btn btn-primary btn-xs" id="alpha">Alphabetically</button>
-                <button type="submit" class="btn btn-primary btn-xs" id="alpha">Genre</button>
+                <button type="submit" class="btn btn-primary btn-xs" id="alpha">A-Z</button>
+                <button type="submit" class="btn btn-primary btn-xs" id="alpha-backwards">Z-A</button>
+                <button type="submit" class="btn btn-primary btn-xs" id="genre">Genre</button>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -47,6 +48,3 @@
         </div>
     </div>
 </div>
-
-{{!-- Loads in sorting script --}}
-<script src="/js/sort.js" defer></script> 
