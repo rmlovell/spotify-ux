@@ -36,12 +36,12 @@ window.addEventListener('load', async function() {
 
 // Compares two values in an order
 function compare(a, b) {
-     // Object should have name key
-     if (Object.keys(a).includes('name') || Object.keys(b).includes('name')) {
+    // Object should have name key
+     if (!Object.keys(a).includes('name') || !Object.keys(b).includes('name')) {
         return undefined;
-    } else if (a.name < b.name) {
+    } else if (a.name.toLowerCase() < b.name.toLowerCase()) {
         return -1;
-    } else if (a.name > b.name) {
+    } else if (a.name.toLowerCase() > b.name.toLowerCase()) {
         return 1;
     } else {
         return 0;
@@ -69,14 +69,15 @@ function finishSorting(sorted) {
 }
 
 function replaceElements(data) {
+    
     // Initial coordinate values
     let top = 90, right = 90, z_index = 19;
     
     const elems = Array.from(document.getElementsByClassName('albums'));
-    
-    elems.forEach(item => {
+
+    data.forEach(item => {
         // Gets indicies of HTML elements in order of data array
-        const currIndex = data.findIndex(i => i.name === item.id);
+        const currIndex = elems.findIndex(i => i.id === item.name);
         
         // Changes coordinates of albums
         document.getElementsByClassName('albums')[currIndex].style['top'] = top.toString() + 'px';
@@ -92,7 +93,7 @@ function replaceElements(data) {
         if (top < 0) { top = 90; }
         if (right < 0) { right = 90; }
         if (z_index < 10) { z_index = 19; }
-    });
+    })
 }
 
 // Gets current album 
