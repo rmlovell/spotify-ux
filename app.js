@@ -83,7 +83,10 @@ app.get('/milkcrate', function(req, res) {
         "img" : el.album.images[1].url,
         "pos" : pos,
         "zIndex" : zIndex,
-        "id" :  el.album.id
+        "id" :  el.album.id,
+        "popularity" : el.album.popularity,
+        "release" : el.album.release_date,
+        "artist-name" : el.album.artists[0].name
       }
       //console.log(album);
       albums.push(album);
