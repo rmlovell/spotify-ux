@@ -9,7 +9,8 @@ const cookieParser = require('cookie-parser');
 const exphbs = require('express-handlebars');
 const fetch = require('node-fetch');
 const path = require('path');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const { get } = require('request');
 //var fetch = require("fetch");
 
 // keys and ports 
@@ -98,7 +99,7 @@ app.get('/milkcrate', function(req, res) {
     if(albums.length > 0){
       collection.push(albums);
     }
-    console.log(collection);
+    //console.log(collection);
 
     // Updates global collection variable with recently loaded collections
     storedCollections = collection;
@@ -119,9 +120,39 @@ app.get('/milkcrate/json', function(req, res) {
 
 // discover page
 app.get('/discover', function(req, res) {
-
+  var topArtists = [];
   // in view folder there is a discover.hbs file that is your html
   // gather all the data you need here and pass it -vvvvv- here.
+  var recommendations = {
+    url: 'https://api.spotify.com/v1/recommendations?limit=5&seed_artists=4NHQUGzhtTLFvgF5SZesLK,0epOFNiUfyON9EYx7Tpr6V&market=US',
+    method: 'GET',
+    headers: { 
+      'Authorization': 'Bearer ' + req.session.access_token,
+      'Accept' : 'application/json',
+      'Content-Type' : 'application/json'
+   },
+    json: true
+  };
+  // var artists = {
+  //   url: 'https://api.spotify.com/v1/me/top/artists',
+  //   method: 'GET',
+  //   headers: { 
+  //     'Authorization': 'Bearer ' + req.session.access_token,
+  //     'Accept' : 'application/json',
+  //     'Content-Type' : 'application/json'
+  //  },
+  //   json: true
+  // };
+  // request.get(artists, function(err, res, body) {
+  //   //console.log(body.items[0].album.artists[0].id);
+  //   body.items.forEach(el => {
+  //     topArtists.push(el.id);
+  //   })
+  //   console.log(topArtists);
+  // });
+  request.get(recommendations, function(err, res, body) {
+    console.log(body)
+  });
   res.render('discover', {code : req.session.access_token});
   
 });
@@ -221,7 +252,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email user-library-read user-library-modify';
+  var scope = 'user-read-private user-read-email user-library-read user-library-modify user-top-read';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
