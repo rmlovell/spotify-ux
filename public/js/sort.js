@@ -253,6 +253,32 @@ function finishSorting(sorted) {
     }
 }
 
+// Deletes albums if dragged into trash can
+$(function() {
+    $(".albums").draggable();
+
+    $('#trash').droppable({
+        over: async function(event, ui) {
+            ui.draggable.remove();
+            let id = undefined;
+            collection.forEach(arr => {
+                arr.forEach(obj => {
+                    if (obj.name === ui.draggable.prop('id')) {
+                        id = obj.id;
+                    }
+                });
+            })   
+            const response = await fetch('/deleteAlbums', {
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json'
+                },
+                body: JSON.stringify({id: id})
+            });
+        }
+    });
+});
+
 // Checks and updates album name and sorting 
 window.addEventListener('change', () => updateAlbumText(curr_category));
 

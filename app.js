@@ -189,10 +189,10 @@ app.post('/addAlbums', function(req, res){
 });
 // delete album
 app.post('/deleteAlbums', function(req, res){
-  console.log(req.body.id);
+  console.log(req.body);
   var options = {
     url: 'https://api.spotify.com/v1/me/albums?ids=' + req.body.id,
-    method: 'PUT',
+    method: 'DELETE',
     headers: { 
       'Authorization': 'Bearer ' + req.session.access_token,
       'Accept' : 'application/json',
@@ -202,7 +202,7 @@ app.post('/deleteAlbums', function(req, res){
   };
 
   request(options, function(error, response, body) {
-    console.log(response);
+    // console.log(response);
   });
 
 });
