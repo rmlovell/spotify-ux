@@ -1,0 +1,77 @@
+{{!< default}}
+
+
+<div class="row " style="background-color: rgba(11, 35, 16, 0.129);">
+    <div class="col p-3">
+        <img id="menu" class="ml-3" style="width: 30px; height: 30px;" src="/img/menu.png" alt="">
+    </div>
+    <div class="col text-center">
+        <h1 class="p-2" style="color: whitesmoke; -webkit-text-stroke: 0.25px black;">Discover</h1>
+    </div>
+    <div class="col">
+
+    </div>
+</div>
+<div class="mt-5 ml-5 row justify-content-center">
+    {{#each collection}}
+    <div class="col-4 ">
+        <div id="{{@index}}" onclick="selectCrate('{{@index}}')"
+            style="height: 250px; width: 250px; position: relative">
+            <h2 class="text-center album-text"
+                style="font-size: 1.2em; color: whitesmoke; -webkit-text-stroke: 0.25px black; position: absolute; top: 270px; right: 100px;">
+                Album Name</h2>
+            <!--<h2 class="text-center" style="font-size: 1.2em; color: whitesmoke; -webkit-text-stroke: 0.25px black; position: absolute; top: 310px; right: 100px;">Bucket name</h2>-->
+            <img style="position: absolute; top: 225px; right: 64px;" class="" src="/img/crate.png" alt="">
+            {{#each this}}
+            <img class="albums" id="{{name}}" onclick="bringFront('{{name}}');"
+                style="height: 150px; width: 150px; position: absolute; top: {{pos}}px; right: {{pos}}px; z-index: {{zIndex}};"
+                src="{{img}}" alt="{{name}}">
+            {{/each}}
+        </div>
+    </div>
+    {{/each}}
+</div>
+
+
+<!-- Sort modal -->
+<div class="modal fade" id="sortModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">Sort by</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body container">
+                <h5>Album Name:</h5>
+                <button type="submit" class="btn btn-primary btn-xs" id="alpha">A-Z</button>
+                <button type="submit" class="btn btn-primary btn-xs" id="alpha-backwards">Z-A</button>
+
+                <h5 class="mt-2">Artist Name:</h5>
+                <button type="submit" class="btn btn-primary btn-xs" id="artist">A-Z</button>
+                <button type="submit" class="btn btn-primary btn-xs" id="artist-backwards">Z-A</button>
+
+                <h5 class="mt-2">Popularity:</h5>
+                <button type="submit" class="btn btn-primary btn-xs" id="popular">Popular</button>
+                <button type="submit" class="btn btn-primary btn-xs" id="unknown">Unknown</button>
+
+                {{!-- <button type="submit" class="btn btn-primary btn-xs" id="genre">Genre</button> --}}
+
+                <h5 class="mt-2">Release Date:</h5>
+                <button type="submit" class="btn btn-primary btn-xs" id="latest">Latest</button>
+                <button type="submit" class="btn btn-primary btn-xs" id="oldest">Oldest</button>
+
+                <h5 class="mt-2">Other:</h5>
+                <button type="submit" class="btn btn-primary btn-xs" id="unsort">Unsort</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="box" style="position:relative;">
+    <p class="fas fa-trash" id="trash" style="position: fixed; bottom:0; right:0; font-size:100px"></p>
+</div>

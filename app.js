@@ -124,10 +124,11 @@ app.get('/milkcrate/json', function(req, res) {
 // discover page
 app.get('/discover', function(req, res) {
   var topArtists = [];
+  var topArtistsString = "";
   // in view folder there is a discover.hbs file that is your html
   // gather all the data you need here and pass it -vvvvv- here.
-  var recommendations = {
-    url: 'https://api.spotify.com/v1/recommendations?limit=5&seed_artists=4NHQUGzhtTLFvgF5SZesLK,0epOFNiUfyON9EYx7Tpr6V&market=US',
+  var artists = {
+    url: 'https://api.spotify.com/v1/me/top/artists?limit=5',
     method: 'GET',
     headers: { 
       'Authorization': 'Bearer ' + req.session.access_token,
@@ -136,28 +137,59 @@ app.get('/discover', function(req, res) {
    },
     json: true
   };
-  // var artists = {
-  //   url: 'https://api.spotify.com/v1/me/top/artists',
-  //   method: 'GET',
-  //   headers: { 
-  //     'Authorization': 'Bearer ' + req.session.access_token,
-  //     'Accept' : 'application/json',
-  //     'Content-Type' : 'application/json'
-  //  },
-  //   json: true
-  // };
-  // request.get(artists, function(err, res, body) {
-  //   //console.log(body.items[0].album.artists[0].id);
-  //   body.items.forEach(el => {
-  //     topArtists.push(el.id);
-  //   })
-  //   console.log(topArtists);
-  // });
-  request.get(recommendations, function(err, res, body) {
-    console.log(body)
-  });
-  res.render('discover', {code : req.session.access_token});
-  
+  request.get(artists, function(err, response, body) {
+    body.items.forEach(el => {
+      topArtists.push(el.id);
+    })
+    topArtistsString = topArtists.toString();
+    var recommendations = {
+      url: `https://api.spotify.com/v1/recommendations?limit=50&seed_artists=${topArtistsString}&market=US`,
+      method: 'GET',
+      headers: { 
+        'Authorization': 'Bearer ' + req.session.access_token,
+        'Accept' : 'application/json',
+        'Content-Type' : 'application/json'
+     },
+      json: true
+    };
+    request.get(recommendations, function(err, response2, body) {
+      var collection = [];
+      var albums = [];
+      var albumIds = [];
+      var pos = 100;
+      var zIndex = 20;
+
+      body.tracks.forEach(el => {
+        if(albumIds.includes(el.album.id)) {
+          return;
+        }
+        pos = pos - 10;
+        zIndex = zIndex - 1;
+        var album = {
+          "name" : el.album.name,
+          "img" : el.album.images[1].url,
+          "pos" : pos,
+          "zIndex" : zIndex,
+          "id" :  el.album.id,
+          "popularity" : el.popularity,
+          "release" : el.album.release_date,
+          "artist-name" : el.album.artists[0].name
+        }
+        albumIds.push(album.id);
+        albums.push(album);
+        if (pos <= 0){
+          collection.push(albums);
+          albums = [];
+          pos = 100;
+          zIndex = 20;
+        }
+      });
+      if(albums.length > 0){
+        collection.push(albums);
+      }
+      res.render('discover', {collection : collection});
+    });
+  }); 
 });
 
 // get albums Api
