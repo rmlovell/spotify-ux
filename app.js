@@ -22,6 +22,8 @@ const port = process.env.PORT || 8888;
 
 // Object that contains collections
 let storedCollections = {};
+// Contains current token
+let token = "";
 
 // app creation
 var app = express();
@@ -51,6 +53,10 @@ app.get('/', function(req, res) {
     res.render('index');
 });
 
+// Sends token
+app.get('/token', function(req, res) {
+  res.send(token);
+});
 
 // collection page
 app.get('/milkcrate', function(req, res) {
@@ -87,9 +93,10 @@ app.get('/milkcrate', function(req, res) {
         "id" :  el.album.id,
         "popularity" : el.album.popularity,
         "release" : el.album.release_date,
-        "artist-name" : el.album.artists[0].name
+        "artist-name" : el.album.artists[0].name,
+        "album-tracks-uri" : el.album.tracks
       }
-      //console.log(album);
+      console.log(body.items);
       albums.push(album);
       if (pos <= 0){
         collection.push(albums);
@@ -287,7 +294,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email user-library-read user-library-modify user-top-read';
+  var scope = 'streaming user-read-private user-read-email user-library-read user-library-modify user-top-read';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -333,6 +340,8 @@ app.get('/callback', function(req, res) {
 
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
+
+        token = access_token;
 
         var options = {
           url: 'https://api.spotify.com/v1/me',
