@@ -26,9 +26,6 @@ window.onSpotifyWebPlaybackSDKReady = async function() {
     player.addListener('account_error', ({ message }) => { console.error(message); });
     player.addListener('playback_error', ({ message }) => { console.error(message); });
 
-    // Stops vinyl from spinning at first
-    document.getElementById('currentRecordImage').classList.remove('paused');
-
     // Playback status updates
     player.addListener('player_state_changed', state => { 
         
@@ -65,6 +62,13 @@ window.onSpotifyWebPlaybackSDKReady = async function() {
     // Whenever play or pause button is clicked
     $('#playPauseButton').on('click', () => pauseOrPlay(player));
 
+    // Space bar is clicked, pause or play will occur
+    $(window).keypress(function(e) {
+        if (e.which === 32) {
+            pauseOrPlay(player);
+        }
+    });
+
     // Whenever back button is clicked
     document.getElementById('stepBackward').addEventListener('click', () => player.previousTrack());
 
@@ -93,6 +97,7 @@ function pauseOrPlay(player) {
             button.classList.add('fa-pause-circle');
             // Stops vinyl from spinning
             document.getElementById('currentRecordImage').classList.remove('paused');
+            document.getElementById('vinylTemplate').classList.remove('paused');
         // Button is currently paused
         } else {
             // Change to playy
@@ -100,6 +105,7 @@ function pauseOrPlay(player) {
             button.classList.add('fa-play-circle');
             // Vinyl starts spinning
             document.getElementById('currentRecordImage').classList.add('paused');
+            document.getElementById('vinylTemplate').classList.add('paused');
         }
     });
 }

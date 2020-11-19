@@ -16,13 +16,25 @@ body {
 }
 
 #currentRecordImage {
-    height: 150px;
+    position: absolute;
+    top: 50px;
+    right: 67px;
+    height: 50px;
+    width: 50px;
+    border-radius:90px;
+}
+
+#vinylTemplate {
     width: 150px;
-    border-radius: 50%;
+    height: 150px;
+}
+
+.recordBox {
+    position: relative;
 }
 
 .animate {
-    animation: rotate 2s infinite linear;
+    animation: rotate 4s infinite linear;
 }
 
 .paused{
