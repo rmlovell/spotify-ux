@@ -1,7 +1,7 @@
 // Current category (links to a function) 
 let curr_category = undefined;
 // Where collection will be stored 
-let collection = [];
+window.collection = [];
 
 // Whenever album collection page loads
 window.addEventListener('load', async function() {
@@ -89,7 +89,7 @@ function getNameCat(curr_album, i) {
         "U-Z": "UVWXYZ"
     };
 
-    let curr_cat = "NA";
+    let curr_cat = "NA / (Not alphabetical)";
     // Retrieves current alphabetical category of album
     for (let key in alpha_cat) {
         if (alpha_cat[key].includes(curr_album[i].id.toUpperCase()[0])) {
@@ -255,7 +255,9 @@ function finishSorting(sorted) {
 
 // Deletes albums if dragged into trash can
 $(function() {
-    $(".albums").draggable();
+    $(".albums").draggable({
+        revert: true
+    });
 
     $('#trash').droppable({
         over: async function(event, ui) {

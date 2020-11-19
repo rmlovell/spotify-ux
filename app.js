@@ -94,7 +94,7 @@ app.get('/milkcrate', function(req, res) {
         "popularity" : el.album.popularity,
         "release" : el.album.release_date,
         "artist-name" : el.album.artists[0].name,
-        "album-tracks-uri" : el.album.tracks
+        "album-uri" : el.album.uri
       }
       console.log(body.items);
       albums.push(album);

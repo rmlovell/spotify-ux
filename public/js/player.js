@@ -1,4 +1,6 @@
 window.onSpotifyWebPlaybackSDKReady = async function() {
+    let device = undefined;
+    
     // Getting token from server
     const tokenResponse = await fetch('/token');
     const tokenBody = await tokenResponse.text();
@@ -9,7 +11,10 @@ window.onSpotifyWebPlaybackSDKReady = async function() {
     const uriBody = await uriResponse.json();
 
     // First album is initial uri
-    let spotify_uri = uriBody[0][0]['album-tracks-uri'].items[0].uri;
+    let spotifyURI = uriBody[0][0]['album-uri'];
+
+    // Initial record image
+    document.getElementById('currentRecordImage').src = uriBody[0][0].img;
 
     // Milk Crate Player
     const player = new Spotify.Player({
@@ -24,22 +29,32 @@ window.onSpotifyWebPlaybackSDKReady = async function() {
     player.addListener('playback_error', ({ message }) => { console.error(message); });
 
     // Playback status updates
-    player.addListener('player_state_changed', state => { console.log(state); });
+    player.addListener('player_state_changed', state => { 
+        
+        // Changes text to current song playing
+        document.getElementById('currentSongPlaying').innerText = 'Current Song: ' + state['track_window']['current_track'].name;
+
+        console.log('Current state');
+        console.log(state); 
+    });
 
     // Ready
     player.addListener('ready', async ({ device_id }) => {
-        // Plays current 
+
+        // Plays first song in first album selected
         await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, 
         {
             method: 'PUT',
-            body: JSON.stringify({ uris: [spotify_uri] }),
+            body: JSON.stringify({"context_uri": spotifyURI}),
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
         });
 
-        console.log('Ready with Device ID', device_id);
+        device = device_id;
+        // Logs that device is ready
+        // console.log('Ready with Device ID', device_id);
     });
 
     // Not Ready
@@ -47,6 +62,106 @@ window.onSpotifyWebPlaybackSDKReady = async function() {
         console.log('Device ID has gone offline', device_id);
     });
 
+    // Whenever play or pause button is clicked
+    $('#playPauseButton').on('click', () => pauseOrPlay(player));
+
+    // Whenever back button is clicked
+    document.getElementById('stepBackward').addEventListener('click', () => player.previousTrack());
+
+    // Whenever forward button is clicked
+    document.getElementById('stepForward').addEventListener('click', () => player.nextTrack());
+
+    // Changes if dragged into record player
+    $(function() {
+        $('#currentRecordContainer').droppable({
+            drop: function(event, ui) {
+                const parent = ui.draggable[0].parentNode;
+                ui.draggable.remove();            
+                let id = undefined;
+                collection.forEach(arr => {
+                    arr.forEach(async (obj) => {
+                        if (obj.name === ui.draggable.prop('id')) {
+                            // Updates dragged HTML element back in place
+                            revertBackToCrate(obj, parent);
+                            
+                            player.pause();
+
+                            // Plays chosen album
+                            await play(obj, device, token);
+                        }
+                    });
+                })
+            }
+        });
+    });
+
     // Connect to the player!
     player.connect();
 };
+
+/**
+ * Pauses or plays the current song.
+ * @param {Object<Spotify Player>} player A spotify player object
+ */
+function pauseOrPlay(player) {
+    player.togglePlay().then(() => {
+        const button = document.getElementById('playPauseButton');
+        const className = Array.from(button.classList);
+
+        // Button is currently play
+        if (className.includes('fa-play-circle')) {
+            // Change button to pause
+            button.classList.remove('fa-play-circle');
+            button.classList.add('fa-pause-circle');
+            // Stops vinyl from spinning
+            document.getElementById('currentRecordImage').classList.remove('paused');
+            document.getElementById('vinylTemplate').classList.remove('paused');
+        // Button is currently paused
+        } else {
+            // Change to playy
+            button.classList.remove('fa-pause-circle');
+            button.classList.add('fa-play-circle');
+            // Vinyl starts spinning
+            document.getElementById('currentRecordImage').classList.add('paused');
+            document.getElementById('vinylTemplate').classList.add('paused');
+        }
+    });
+}
+
+// Creates new HTML elem in place of original position
+function revertBackToCrate(obj, parent) {
+    const newElem = document.createElement('img');
+
+    newElem.classList.add('albums');
+    newElem.id = obj.name;
+    newElem.onclick = 'bringFront(' + obj.name + ');';
+    newElem.style.height = '150px';
+    newElem.style.width = '150px';
+    newElem.style.position = 'absolute';
+    newElem.style.top = obj.pos + 'px';
+    newElem.style.right = obj.pos + 'px';
+    newElem.style['z-index'] = obj.zIndex;
+    newElem.src = obj.img;
+    newElem.alt = obj.name;
+
+    $(".albums").draggable({
+        revert: true
+    });
+
+    parent.appendChild(newElem);
+}
+
+async function play(obj, device, token) {
+
+    await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device}`, 
+    {
+        method: 'PUT',
+        body: JSON.stringify({"context_uri": obj['album-uri']}),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    });
+
+    document.getElementById('currentRecordImage').src = obj.img;
+}

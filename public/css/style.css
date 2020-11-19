@@ -5,6 +5,61 @@ body {
     background-attachment: fixed;
 }
 
+.divider {
+    margin-top: 200px;
+}
+
+#playerContainer, #currentRecordContainer, #currentSongContainer {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+#currentRecordImage {
+    position: absolute;
+    top: 50px;
+    right: 63px;
+    height: 55px;
+    width: 55px;
+    border-radius:90px;
+}
+
+#vinylTemplate {
+    width: 150px;
+    height: 150px;
+}
+
+.recordBox {
+    position: relative;
+}
+
+.animate {
+    animation: rotate 4s infinite linear;
+}
+
+.paused{
+    -webkit-animation-play-state:paused;
+    -moz-animation-play-state:paused;
+    -o-animation-play-state:paused; 
+    animation-play-state:paused;
+}
+
+@keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to { 
+      transform: rotate(360deg);
+    }
+}
+
+.playerButtons {
+    color: rgb(37, 37, 37)
+}
+
+.playerButtons:focus, input[type="button"]:focus {
+    outline: none;
+}
 
 .searchbar{
     margin-bottom: auto;
