@@ -111,9 +111,11 @@
     </div>
 </div>
 
-<script src="https://sdk.scdn.co/spotify-player.js" defer></script>
-<script src="js/player.js" defer></script>
-
-<div class="box" style="position:relative;">
+{{!-- Trash can --}}
+<div class="box droppable" style="position:relative;">
     <p class="fas fa-trash" id="trash" style="position: fixed; bottom:0; right:0; font-size:100px"></p>
 </div>
+
+{{!-- Spotify Player SDK API --}}
+<script src="https://sdk.scdn.co/spotify-player.js" defer></script>
+<script src="js/player.js" defer></script>
