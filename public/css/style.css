@@ -6,13 +6,39 @@ body {
 }
 
 .divider {
-    margin-top: 300px;
+    margin-top: 200px;
 }
 
-#playerContainer {
+#playerContainer, #currentRecordContainer, #currentSongContainer {
     align-items: center;
     display: flex;
     justify-content: center;
+}
+
+#currentRecordImage {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+}
+
+.animate {
+    animation: rotate 2s infinite linear;
+}
+
+.paused{
+    -webkit-animation-play-state:paused;
+    -moz-animation-play-state:paused;
+    -o-animation-play-state:paused; 
+    animation-play-state:paused;
+}
+
+@keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to { 
+      transform: rotate(360deg);
+    }
 }
 
 .playerButtons {

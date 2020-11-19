@@ -11,7 +11,8 @@ window.onSpotifyWebPlaybackSDKReady = async function() {
     // First album is initial uri
     let spotifyURI = uriBody[0][0]['album-uri'];
 
-    console.log(spotifyURI);
+    // Initial record image
+    document.getElementById('currentRecordImage').src = uriBody[0][0].img;
 
     // Milk Crate Player
     const player = new Spotify.Player({
@@ -25,17 +26,14 @@ window.onSpotifyWebPlaybackSDKReady = async function() {
     player.addListener('account_error', ({ message }) => { console.error(message); });
     player.addListener('playback_error', ({ message }) => { console.error(message); });
 
+    // Stops vinyl from spinning at first
+    document.getElementById('currentRecordImage').classList.remove('paused');
+
     // Playback status updates
     player.addListener('player_state_changed', state => { 
         
-        // Whenever back button is clicked
-        document.getElementById('stepBackward').addEventListener('click', () => player.previousTrack());
-
-        // Whenever forward button is clicked
-        document.getElementById('stepForward').addEventListener('click', () => player.nextTrack());
-        
-        // Whenever play or pause button is clicked
-        $('#playPauseButton').on('click', () => pauseOrPlay(player));
+        // Name of current song
+        document.getElementById('currentSongPlaying').innerText = 'Current Song: ' + state['track_window']['current_track'].name;
 
         console.log('Current state');
         console.log(state); 
@@ -44,7 +42,6 @@ window.onSpotifyWebPlaybackSDKReady = async function() {
     // Ready
     player.addListener('ready', async ({ device_id }) => {
 
-        
         // Plays first song in first album selected
         await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, 
         {
@@ -56,9 +53,6 @@ window.onSpotifyWebPlaybackSDKReady = async function() {
             },
         });
 
-        // Whenever play or pause button is clicked
-        $('#playPauseButton').on('click', () => pauseOrPlay(player));
-        
         // Logs that device is ready
         // console.log('Ready with Device ID', device_id);
     });
@@ -68,6 +62,17 @@ window.onSpotifyWebPlaybackSDKReady = async function() {
         console.log('Device ID has gone offline', device_id);
     });
 
+    // Whenever play or pause button is clicked
+    $('#playPauseButton').on('click', () => pauseOrPlay(player));
+
+    // Whenever back button is clicked
+    document.getElementById('stepBackward').addEventListener('click', () => player.previousTrack());
+
+    // Whenever forward button is clicked
+    document.getElementById('stepForward').addEventListener('click', () => player.nextTrack());
+
+    // Changes text to current song playing
+    
     // Connect to the player!
     player.connect();
 };
@@ -81,16 +86,20 @@ function pauseOrPlay(player) {
         const button = document.getElementById('playPauseButton');
         const className = Array.from(button.classList);
 
-        // Button is currently circle
+        // Button is currently play
         if (className.includes('fa-play-circle')) {
             // Change button to pause
             button.classList.remove('fa-play-circle');
             button.classList.add('fa-pause-circle');
+            // Stops vinyl from spinning
+            document.getElementById('currentRecordImage').classList.remove('paused');
         // Button is currently paused
         } else {
-            // Change to paly
+            // Change to playy
             button.classList.remove('fa-pause-circle');
             button.classList.add('fa-play-circle');
+            // Vinyl starts spinning
+            document.getElementById('currentRecordImage').classList.add('paused');
         }
     });
 }
