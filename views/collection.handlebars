@@ -1,7 +1,7 @@
 {{!< default}}
 
 
-<div class="row " style="background-color: rgba(11, 35, 16, 0.129);">
+<div class="row" style="background-color: rgba(11, 35, 16, 0.129);">
     <div  class="col p-3">
         <img id="menu" class="ml-3" style="width: 30px; height: 30px;" src="/img/menu.png" alt="">
     </div>
@@ -12,9 +12,12 @@
         
     </div>
 </div>
-<div class="container mt-5 ml-5 row justify-content-center">
+
+<div class="container">
+    {{!-- Milk crates --}}
+    <div class="row mt-5 ml-5 justify-content-center">
     {{#each collection}}
-        <div class="col-4">
+        <div class="col-md-4">
             <div id="{{@index}}" onclick="selectCrate('{{@index}}')"  style="height: 250px; width: 250px; position: relative">
                 <h2 class="text-center album-text" style="font-size: 1.2em; color: whitesmoke; -webkit-text-stroke: 0.25px black; position: absolute; top: 270px; right: 100px;">Album Name</h2>
                 <!--<h2 class="text-center" style="font-size: 1.2em; color: whitesmoke; -webkit-text-stroke: 0.25px black; position: absolute; top: 310px; right: 100px;">Bucket name</h2>-->
@@ -25,9 +28,33 @@
             </div>
         </div>
     {{/each}}   
-</div>
+    </div>
+ </div>
 
-<!-- Sort modal -->
+<div class="row divider"></div>
+
+{{!-- Music player --}}
+<div class="container" id="playerContainer">
+    <div class="row border rounded bg-light justify-content-center">
+        {{!-- Back button --}}
+        <div class="col mt-2">
+            <button type="button" class="playerButtons fas fa-step-backward fa-3x 
+                bg-transparent border-0" id="stepBackward"></a>            
+        </div>
+        {{!-- Play button --}}
+        <div class="col ml-n4 mr-n4">
+            <button type="button" class="playerButtons fas fa-pause-circle fa-4x 
+                bg-transparent border-0" id="playPauseButton"></a>            
+        </div>
+        {{!-- Forward button --}}
+        <div class="col mt-2">
+            <button type="button" class="playerButtons fas fa-step-forward fa-3x 
+                bg-transparent border-0" id="stepForward"></a>            
+        </div>
+    </div>
+</div>
+    
+{{!-- Sort modal --}}
 <div class="modal fade" id="sortModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

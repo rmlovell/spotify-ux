@@ -5,6 +5,23 @@ body {
     background-attachment: fixed;
 }
 
+.divider {
+    margin-top: 300px;
+}
+
+#playerContainer {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.playerButtons {
+    color: rgb(37, 37, 37)
+}
+
+.playerButtons:focus, input[type="button"]:focus {
+    outline: none;
+}
 
 .searchbar{
     margin-bottom: auto;
