@@ -6,6 +6,19 @@ window.collection = [];
 // Whenever album collection page loads
 window.addEventListener('load', async function() {
     
+    const albums = document.getElementsByClassName('albums');
+    
+    // Adds front label to front album
+    for (let i = 0; i < albums.length; ++i) {
+        if (albums[i].style.top === '90px') {
+            albums[i].classList.add('front');
+        } else {
+            albums[i].classList.remove('front');
+        }
+    }
+
+    $('.front').draggable();
+
     updateAlbumText(curr_category);
     
     // Retrieves milk crate in json format
@@ -252,35 +265,6 @@ function finishSorting(sorted) {
         alert("Error sorting files");
     }
 }
-
-// Deletes albums if dragged into trash can
-$(function() {
-    $(".albums").draggable({
-        revert: true
-    });
-
-    $('#trash').droppable({
-        over: async function(event, ui) {
-            ui.draggable.remove();
-            let id = undefined;
-            collection.forEach(arr => {
-                arr.forEach(obj => {
-                    if (obj.name === ui.draggable.prop('id')) {
-                        id = obj.id;
-                    }
-                });
-            })   
-            const response = await fetch('/deleteAlbums', {
-                method: 'POST',
-                headers: {
-                    'Content-Type' : 'application/json'
-                },
-                body: JSON.stringify({id: id})
-            });
-            location.reload();
-        }
-    });
-});
 
 // Checks and updates album name and sorting 
 window.addEventListener('change', () => updateAlbumText(curr_category));

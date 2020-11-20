@@ -6,7 +6,7 @@ body {
 }
 
 .divider {
-    margin-top: 200px;
+    margin-top: 130px;
 }
 
 #playerContainer, #currentRecordContainer, #currentSongContainer {
@@ -61,6 +61,22 @@ body {
     outline: none;
 }
 
+#trash {
+    position: fixed; 
+    bottom:0; 
+    right:0; 
+    width: 100px;
+    height: 100px;
+}
+
+#plus {
+    position: fixed; 
+    bottom:0; 
+    right:0; 
+    width: 150px;
+    height: 150px;
+}
+
 .searchbar{
     margin-bottom: auto;
     margin-top: auto;
@@ -84,13 +100,13 @@ body {
     .searchbar:hover > .search_input{
     padding: 0 10px;
     width: 14vw;
-    caret-color:red;
+    caret-color: #007bff;
     transition: width 0.4s linear;
     }
 
     .searchbar:hover > .search_icon{
     background: white;
-    color: #e74c3c;
+    color: #007bff;
     }
 
     .search_icon{

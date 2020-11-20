@@ -170,10 +170,12 @@ function addAlbum(id){
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.addEventListener('readystatechange', function(e) {
-        window.location.href = 'http://localhost:8888/milkcrate';
+        console.log(e);
     });
     let params = {'id' : id}
     xhr.send(JSON.stringify(params));
+
+    window.location.href = '/milkcrate';
 }
 
 $("#menu").click(function(e) {
@@ -187,3 +189,93 @@ $("#menu").click(function(e) {
     e.preventDefault();
     $("#sidebar").css('left', '-100vw');
   });
+
+// Adds a class label for albums in front
+window.addEventListener('keyup', () => {
+    const albums = document.getElementsByClassName('albums');
+
+    for (let i = 0; i < albums.length; ++i) {
+        if (albums[i].style.top === '90px') {
+            albums[i].classList.add('front');
+        } else {
+            albums[i].classList.remove('front');
+        }
+    }
+    // Makes front albums draggable
+    $(".front").draggable({
+        revert:  function(dropped) {
+            var $draggable = $(this),
+                hasBeenDroppedBefore = $draggable.data('hasBeenDropped'),
+                wasJustDropped = dropped && dropped[0].id == "droppable";
+            if(wasJustDropped) {
+                // don't revert, it's in the droppable
+                return false;
+            } else {
+                if (hasBeenDroppedBefore) {
+                    // don't rely on the built in revert, do it yourself
+                    $draggable.animate({ top: 0, left: 0 }, 'slow');
+                    return false;
+                } else {
+                    // just let the built in revert work, although really, you could animate to 0,0 here as well
+                    return true;
+                }
+            }
+        }
+    });
+});
+
+$('#trash').droppable({
+    over: async function(event, ui) {
+            
+        const parent = ui.draggable[0].parentNode;
+
+        ui.draggable.remove();
+
+        // Moves albums up
+        moveAlbumsUp(parent);
+
+        let id = undefined;
+        collection.forEach(arr => {
+            arr.forEach(obj => {
+                if (obj.name === ui.draggable.prop('id')) {
+                    id = obj.id;
+                }
+            });
+        })
+        // Sends delete request to spotify   
+        const response = await fetch('/deleteAlbums', {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({id: id})
+        });
+    }
+});
+
+
+function moveAlbumsUp(parent) {
+    const childElems = parent.children;
+
+    for (let i = 0; i < childElems.length; ++i) {
+        
+        if (childElems[i].classList.contains('albums')) {
+            const top = parseInt(childElems[i].style.top);
+            const newTop = top + 10;
+
+            childElems[i].style.top = newTop.toString() + 'px';
+            childElems[i].style.right = newTop.toString() + 'px';
+
+            const zIndex = parseInt(childElems[i].style['z-index']);
+            const newZ = zIndex + 1;
+
+            childElems[i].style['z-index'] = newZ.toString();
+
+            if (childElems[i].style.top === '90px') {
+                childElems[i].classList.add('front');
+                $('.front').draggable();
+                document.getElementsByClassName('album-text')[parent.id].innerText = childElems[i].id;
+            }
+        }
+    }
+}

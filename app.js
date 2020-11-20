@@ -194,11 +194,20 @@ app.get('/discover', function(req, res) {
       if(albums.length > 0){
         collection.push(albums);
       }
+
+      storedCollections = collection;
+
       res.render('discover', {collection : collection});
     });
   }); 
 });
 
+// get albums Api
+app.get('/getAlbums', function(req, res){
+
+  
+
+});
 
 // search albums api
 app.post('/searchAlbums', function(req, res){
@@ -247,10 +256,9 @@ app.post('/addAlbums', function(req, res){
   };
 
   request(options, function(error, response, body) {
-    
+    console.log(response);
   });
-  console.log("kkk");
-  res.redirect('/')
+
 });
 // delete album
 app.post('/deleteAlbums', function(req, res){
@@ -267,9 +275,9 @@ app.post('/deleteAlbums', function(req, res){
   };
 
   request(options, function(error, response, body) {
-
+    // console.log(response);
   });
-  res.redirect('/milkcrate');
+
 });
 
 // discover albums
@@ -366,7 +374,7 @@ app.get('/callback', function(req, res) {
   }
 });
 
-// get new token if old one is busted
+// get new token if old onw is busted
 
 app.get('/refresh_token', function(req, res) {
 

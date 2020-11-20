@@ -17,7 +17,7 @@ window.onSpotifyWebPlaybackSDKReady = async function() {
     document.getElementById('currentRecordImage').src = uriBody[0][0].img;
 
     // Milk Crate Player
-    const player = new Spotify.Player({
+    window.player = new Spotify.Player({
         name: 'Milk Crate',
         getOAuthToken: cb => { cb(token); }
     });
@@ -34,8 +34,9 @@ window.onSpotifyWebPlaybackSDKReady = async function() {
         // Changes text to current song playing
         document.getElementById('currentSongPlaying').innerText = 'Current Song: ' + state['track_window']['current_track'].name;
 
-        console.log('Current state');
-        console.log(state); 
+        // Logs different states
+        // console.log('Current state');
+        // console.log(state); 
     });
 
     // Ready
@@ -74,16 +75,25 @@ window.onSpotifyWebPlaybackSDKReady = async function() {
     // Changes if dragged into record player
     $(function() {
         $('#currentRecordContainer').droppable({
+            activeClass: 'ui-state-hover',
+            hoverClass: 'ui-state-active',
             drop: function(event, ui) {
+                $(ui.draggable).data('hasBeenDropped', true);
+                
+                // Removes original placed in recordand appends a new copy to the parent
                 const parent = ui.draggable[0].parentNode;
                 ui.draggable.remove();            
+                
+                // Goes through each collection
                 let id = undefined;
                 collection.forEach(arr => {
                     arr.forEach(async (obj) => {
+                        // Object is found in collection and changes are made to it
                         if (obj.name === ui.draggable.prop('id')) {
                             // Updates dragged HTML element back in place
                             revertBackToCrate(obj, parent);
                             
+                            // Pauses player
                             player.pause();
 
                             // Plays chosen album
@@ -129,6 +139,7 @@ function pauseOrPlay(player) {
 }
 
 // Creates new HTML elem in place of original position
+// Current assumes the position is 90px and zIndex is 19 (the front album)
 function revertBackToCrate(obj, parent) {
     const newElem = document.createElement('img');
 
@@ -138,13 +149,13 @@ function revertBackToCrate(obj, parent) {
     newElem.style.height = '150px';
     newElem.style.width = '150px';
     newElem.style.position = 'absolute';
-    newElem.style.top = obj.pos + 'px';
-    newElem.style.right = obj.pos + 'px';
-    newElem.style['z-index'] = obj.zIndex;
+    newElem.style.top = '90px';
+    newElem.style.right = '90px';
+    newElem.style['z-index'] = 19;
     newElem.src = obj.img;
     newElem.alt = obj.name;
 
-    $(".albums").draggable({
+    $(".front").draggable({
         revert: true
     });
 
