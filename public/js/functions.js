@@ -170,7 +170,6 @@ function addAlbum(id){
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.addEventListener('readystatechange', function(e) {
-        location.reload();
     });
     let params = {'id' : id}
     xhr.send(JSON.stringify(params));
