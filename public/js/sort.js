@@ -277,6 +277,7 @@ $(function() {
                 },
                 body: JSON.stringify({id: id})
             });
+            location.reload();
         }
     });
 });
