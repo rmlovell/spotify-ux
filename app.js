@@ -14,8 +14,8 @@ const { get } = require('request');
 //var fetch = require("fetch");
 
 // keys and ports 
-const client_id = 'b486fa09acbd42269c55c353968aa42d'; // Add Your client id
-const client_secret = '2f442e8f8db549da96042f11edff402b'; // Add Your secret
+const client_id ; // Add Your client id
+const client_secret ; // Add Your secret
 const redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 const stateKey = 'spotify_auth_state';
 const port = process.env.PORT || 8888;
